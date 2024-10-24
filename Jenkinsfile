@@ -48,16 +48,12 @@ pipeline {
                 sh 'docker push vijayadarshini/healthcare:1.0'
             }
         }
-
-        stage('AWS-Login') {
-            steps {
-                echo 'Logging into AWS'
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS-ID']]) {
-                    sh 'aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID'
-                    sh 'aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY'
-                }
-            }
+       stage('AWS-Login') {
+      steps {
+        withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWS-ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
         }
+      }
+       }
 
         stage('Provision Test Environment') {
             steps {
