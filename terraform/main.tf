@@ -1,6 +1,8 @@
 # Specify the AWS provider and region
 provider "aws" {
-  region = "us-east-1"  # Change to your preferred region
+  region     = "us-east-1" # replace with your region
+  access_key = var.aws_access_key_id
+  secret_key = var.aws_secret_access_key
 }
 
 # Define the Kubernetes master node
