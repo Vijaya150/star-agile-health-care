@@ -49,19 +49,26 @@ pipeline {
             }
         }
        stage('AWS-Login') {
-      steps {
-        withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWS-ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+    steps {
+        echo 'Logging into AWS'
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS-ID']]) {
+            sh '''
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            '''
         }
-      }
-       }
+    }
+}
 
-        stage('Provision Test Environment') {
-            steps {
-                dir('terraform') {
-                    sh 'terraform init'
-                    sh 'terraform apply -auto-approve'
-                }
-            }
+stage('Provision Test Environment') {
+    steps {
+        dir('terraform') {
+            sh '''
+            terraform init
+            terraform apply -auto-approve
+            '''
         }
+    }
+}
     }
 }
