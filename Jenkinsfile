@@ -43,6 +43,11 @@ pipeline {
         sh 'docker push vijayadarshini/healthcare:1.0'
             }
       }
+    stage('AWS-Login') {
+      steps {
+        withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWS-ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+         }
+      }
     stage('Provision Test Environment') {
             steps {
                 dir('terraform') {
