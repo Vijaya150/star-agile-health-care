@@ -43,5 +43,14 @@ pipeline {
         sh 'docker push vijayadarshini/healthcare:1.0'
             }
       }
+    stage('Provision Test Environment') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform init'
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
   }
 }
+
