@@ -57,12 +57,3 @@ resource "aws_security_group" "k8s_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-# Output the master and worker node IPs
-output "master_public_ip" {
-  value = aws_instance.k8s-master.public_ip
-}
-
-output "worker_public_ips" {
-  value = aws_instance.k8s-worker.*.public_ip
-}
