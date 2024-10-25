@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "vijayadarshini/medicure-app:1.0"
         KUBE_CONTEXT = "my-kubernetes-context"
+        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
     } // Closing brace for environment block
 
     stages {
