@@ -28,9 +28,10 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def image = docker.build(DOCKER_IMAGE)
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                        image.push()
+                        sh "docker build -t ${DOCKER_IMAGE} ."
+                        sh "docker push ${DOCKER_IMAGE}"
+                    }
                     }
                 }
             }
