@@ -4,8 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "vijayadarshini/medicure-app:1.0"
         KUBE_CONTEXT = "my-kubernetes-context"
-    }
-
+    
     stages {
         stage('Checkout') {
             steps {
@@ -28,10 +27,10 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                    // Make sure dockerhub-credentials exists in Jenkins
+                    docker.withRegistry(DOCKER_REGISTRY, 'dockerhub-credentials') {
                         sh "docker build -t ${DOCKER_IMAGE} ."
                         sh "docker push ${DOCKER_IMAGE}"
-                    }
                     }
                 }
             }
