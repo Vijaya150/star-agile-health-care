@@ -4,7 +4,8 @@ pipeline {
     environment {
         DOCKER_IMAGE = "vijayadarshini/medicure-app:1.0"
         KUBE_CONTEXT = "my-kubernetes-context"
-    
+    } // Closing brace for environment block
+
     stages {
         stage('Checkout') {
             steps {
@@ -61,5 +62,3 @@ pipeline {
         }
     }
 }
-}
-
