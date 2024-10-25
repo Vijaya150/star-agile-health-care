@@ -19,7 +19,7 @@ resource "aws_instance" "k8s-worker" {
   count         = 2
 
   tags = {
-    Name = "K8s-Worker-Node-${var.worker_instance_type}-${count.index + 1}"
+    Name = "K8s-Worker-Node-${var.worker_instance_type}-${count.index + 1}"  # Corrected usage
   }
 }
 
@@ -31,21 +31,21 @@ resource "aws_security_group" "k8s_security_group" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["YOUR_IP_ADDRESS/32"]  # Restrict SSH access
+    cidr_blocks = ["34.234.67.235 /32"]  # Replace with a valid IP address
   }
 
   ingress {
     from_port   = 6443
     to_port     = 6443
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Adjust as needed
+    cidr_blocks = ["0.0.0.0/0"]  # Open access, adjust for security
   }
 
   ingress {
     from_port   = 10250
     to_port     = 10250
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Adjust as needed
+    cidr_blocks = ["0.0.0.0/0"]  # Open access, adjust for security
   }
 
   egress {
@@ -61,5 +61,5 @@ output "k8s_master_public_ip" {
 }
 
 output "k8s_worker_public_ips" {
-  value = aws_instance.k8s-worker.*.public_ip
+  value = aws_instance.k8s-worker[*].public_ip  # Use the correct syntax for multiple instances
 }
