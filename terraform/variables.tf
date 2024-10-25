@@ -1,32 +1,26 @@
 variable "aws_access_key_id" {
-  description = "AWS Access Key ID"
+  description = "AWS access key ID"
   type        = string
 }
 
 variable "aws_secret_access_key" {
-  description = "AWS Secret Access Key"
+  description = "AWS secret access key"
   type        = string
 }
-# Define AWS region variable
-variable "aws_region" {
-  description = "AWS region where the infrastructure will be deployed"
-  default     = "us-east-1"
+
+variable "ami_id" {
+  description = "The AMI ID for the Kubernetes master and worker nodes"
+  type        = string
 }
 
-# Define instance type for master node
 variable "master_instance_type" {
-  description = "EC2 instance type for Kubernetes master node"
-  default     = "t2.medium"
+  description = "Instance type for the Kubernetes master"
+  type        = string
+  default     = "t2.micro"  # Adjust the default as needed
 }
 
-# Define instance type for worker nodes
 variable "worker_instance_type" {
-  description = "EC2 instance type for Kubernetes worker nodes"
-  default     = "t2.micro"
-}
-
-# Define the number of worker nodes
-variable "worker_count" {
-  description = "Number of Kubernetes worker nodes"
-  default     = 2
+  description = "Instance type for the Kubernetes workers"
+  type        = string
+  default     = "t2.micro"  # Adjust the default as needed
 }
