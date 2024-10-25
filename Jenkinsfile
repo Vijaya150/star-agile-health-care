@@ -61,5 +61,15 @@ pipeline {
                 }
             }
         }
+        stage('Provision Infrastructure') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform init'
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
+
     }
 }
+
