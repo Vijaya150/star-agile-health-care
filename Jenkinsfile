@@ -32,7 +32,7 @@ pipeline {
      stage('Login to Dockerhub') {
       steps {
         echo 'This stage will loginto Dockerhub' 
-        withCredentials([usernamePassword(credentialsId: 'dockerloginnew', passwordVariable: 'dockerpass', usernameVariable: 'dockeruser')]) {
+        withCredentials([usernamePassword(credentialsId: 'dockerloginnew', passwordVariable: '\'dockerpass', usernameVariable: 'dockeruser')]) {
         sh 'docker login -u ${dockeruser} -p ${dockerpass}'
             }
          }
@@ -45,7 +45,7 @@ pipeline {
       }
     stage('AWS-Login') {
       steps {
-        withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'Awsaccess', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+       withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'Awsaccess', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
          }
       }
     }
