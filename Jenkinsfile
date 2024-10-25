@@ -1,74 +1,59 @@
 pipeline {
-    agent any
-
-    environment {
-        DOCKER_IMAGE = "vijayadarshini/medicure-app:1.0"
-        KUBE_CONTEXT = "my-kubernetes-context"
-        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
-    }
-
-    stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/Vijaya150/star-agile-health-care.git'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                junit 'target/surefire-reports/*.xml'
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    // Make sure dockerhub-credentials exists in Jenkins
-                    docker.withRegistry(DOCKER_REGISTRY, 'dockerhub-credentials') {
-                        sh "docker build -t ${DOCKER_IMAGE} ."
-                        sh "docker push ${DOCKER_IMAGE}"
-                    }
-                }
-            }
-        }
-
-        stage('Provision Infrastructure with Terraform') {
-            steps {
-                script {
-                    // Using withCredentials to pass AWS credentials
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
-                                     accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
-                                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY', 
-                                     credentialsId: 'AWS-ID']]) {
-                        dir('terraform') {
-                            sh 'terraform init'
-                            sh 'terraform apply -auto-approve -var="aws_access_key_id=${AWS_ACCESS_KEY_ID}" -var="aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}"'
+  agent any
+     tools {
+       maven 'M2_HOME'
+           }
+     
+  stages {
+    stage('Git Checkout') {
+      steps {
+        echo 'This stage is to clone the repo from github'
+        git branch: 'master', url: 'https://github.com/rohinicbabu/star-agile-health-care.git'
                         }
-                    }
-                }
             }
-        }
-
-        stage('Deploy to Kubernetes') {
+    stage('Create Package') {
+      steps {
+        echo 'This stage will compile, test, package my application'
+        sh 'mvn package'
+                          }
+            }
+    stage('Generate Test Report') {
+      steps {
+        echo 'This stage generate Test report using TestNG'
+        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '/var/lib/jenkins/workspace/Healthcare/target/surefire-reports', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                          }
+            }
+     stage('Create Docker Image') {
+      steps {
+        echo 'This stage will Create a Docker image'
+        sh 'docker build -t cbabu85/healthcare:1.0 .'
+                          }
+            }
+     stage('Login to Dockerhub') {
+      steps {
+        echo 'This stage will loginto Dockerhub' 
+        withCredentials([usernamePassword(credentialsId: 'dockerloginnew', passwordVariable: 'dockerpass', usernameVariable: 'dockeruser')]) {
+        sh 'docker login -u ${dockeruser} -p ${dockerpass}'
+            }
+         }
+     }
+    stage('Docker Push-Image') {
+      steps {
+        echo 'This stage will push my new image to the dockerhub'
+        sh 'docker push cbabu85/healthcare:1.0'
+            }
+      }
+    stage('AWS-Login') {
+      steps {
+        withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'Awsaccess', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+         }
+      }
+    }
+   stage('Provision Infrastructure') {
             steps {
-                script {
-                    sh "kubectl --context=${KUBE_CONTEXT} apply -f k8s/deployment.yml"
-                    sh "kubectl --context=${KUBE_CONTEXT} apply -f k8s/service.yml"
+                dir('terraform') {
+                    sh 'terraform init'
+                    sh 'terraform apply -auto-approve'
                 }
             }
         }
-    }
-
-    post {
-        always {
-            cleanWs()
-        }
-    }
-}
-
