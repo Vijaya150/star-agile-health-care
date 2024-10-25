@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "vijayadarshini/medicure-app:1.0"
         KUBE_CONTEXT = "my-kubernetes-context"
         DOCKER_REGISTRY = 'https://index.docker.io/v1/'
-    } // Closing brace for environment block
+    }
 
     stages {
         stage('Checkout') {
@@ -40,9 +40,17 @@ pipeline {
 
         stage('Provision Infrastructure with Terraform') {
             steps {
-                dir('terraform') {
-                    sh 'terraform init'
-                    sh 'terraform apply -auto-approve'
+                script {
+                    // Using withCredentials to pass AWS credentials
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', 
+                                     accessKeyVariable: 'AWS_ACCESS_KEY_ID', 
+                                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY', 
+                                     credentialsId: 'AWS-ID']]) {
+                        dir('terraform') {
+                            sh 'terraform init'
+                            sh 'terraform apply -auto-approve -var="aws_access_key_id=${AWS_ACCESS_KEY_ID}" -var="aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}"'
+                        }
+                    }
                 }
             }
         }
@@ -63,3 +71,4 @@ pipeline {
         }
     }
 }
+
