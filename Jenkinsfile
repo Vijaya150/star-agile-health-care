@@ -66,7 +66,7 @@ pipeline {
         dir('terraform') {  // Ensure this matches your actual Terraform directory
             withCredentials([[
                 $class: 'AmazonWebServicesCredentialsBinding',
-                credentialsId: 'your-aws-credentials-id'
+                credentialsId: 'Awsaccess'
             ]]) {
                 sh '''
                     terraform init
