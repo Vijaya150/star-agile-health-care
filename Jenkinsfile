@@ -75,20 +75,21 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to Kubernetes Test Environment') {
-            steps {
-                script {
-                    sh "kubectl --context=kubernetes-context apply -f k8s/test-deployment.yml"
-                }
-            }
-        }
-        stage('Deploy to Kubernetes Production Environment') {
+         stage('Destroy Infrastructure') {
             when {
-                expression { currentBuild.currentResult == 'SUCCESS' }
+                expression { params.TERRAFORM_DESTROY == true } // Optionally controlled by a parameter
             }
             steps {
-                script {
-                    sh "kubectl --context=kubernetes-context apply -f k8s/prod-deployment.yml"
+                dir('terraform') {
+                    withCredentials([[ 
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'Awsaccess'
+                    ]]) {
+                        sh '''
+                            terraform init
+                            terraform destroy -auto-approve -var="AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" -var="AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+                        '''
+                    }
                 }
             }
         }
