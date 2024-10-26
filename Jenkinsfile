@@ -92,12 +92,5 @@ pipeline {
                 }
             }
         }
-        // Optional: Cleanup stage
-        stage('Cleanup') {
-            steps {
-                echo 'Cleaning up unused Docker images'
-                sh 'docker image prune -f'
-            }
-        }
     }
 }
