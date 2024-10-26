@@ -61,18 +61,22 @@ pipeline {
                 }
             }
         }
-        stage('Provision Infrastructure') {
-    steps {
-        dir('terraform') {  // Update this if 'terraform' isn't the correct path
-            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'Awsaccess']]) {
+       stage('Provision Infrastructure') {
+         steps {
+        dir('terraform') {  // Ensure this matches your actual Terraform directory
+            withCredentials([[
+                $class: 'AmazonWebServicesCredentialsBinding',
+                credentialsId: 'your-aws-credentials-id'
+            ]]) {
                 sh '''
                     terraform init
-                    terraform apply -auto-approve
+                    terraform apply -auto-approve -var="AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" -var="AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
                 '''
             }
         }
     }
 }
+
     }
 }
 
