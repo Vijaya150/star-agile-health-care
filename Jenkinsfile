@@ -76,10 +76,26 @@ pipeline {
         }
     }
 }
+      stage('Deploy to Kubernetes Test Environment') {
+            steps {
+                script {
+                    sh "kubectl --context=kubernetes-context apply -f k8s/test-deployment.yml"
+                }
+            }
+        }
 
+     stage('Deploy to Kubernetes Production Environment') {
+            when {
+                expression { currentBuild.result == 'SUCCESS' }
+            }
+            steps {
+                script {
+                    sh "kubectl --context=kubernetes-context apply -f k8s/prod-deployment.yml"
+                }
+            }
+     }
     }
 }
-
 
 
 
