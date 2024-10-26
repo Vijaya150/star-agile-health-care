@@ -64,7 +64,7 @@ pipeline {
         stage('Provision Infrastructure') {
     steps {
         dir('terraform') {  // Update this if 'terraform' isn't the correct path
-            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'your-aws-credentials-id']]) {
+            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'Awsaccess']]) {
                 sh '''
                     terraform init
                     terraform apply -auto-approve
