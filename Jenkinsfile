@@ -63,11 +63,14 @@ pipeline {
         }
         stage('Provision Infrastructure') {
             steps {
-                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                  sh '''
-                   terraform init
-                   terraform apply -var "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" -var "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" -auto-approve
-                   '''
+               withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'Awsaccess']]) {
+                // Terraform and AWS commands
+                sh '''
+                 terraform init
+                 terraform apply -auto-approve
+                '''
+}
+
 }
 
                 }
