@@ -77,7 +77,7 @@ pipeline {
         }
          stage('Destroy Infrastructure') {
             when {
-                expression { params.TERRAFORM_DESTROY == true } // Optionally controlled by a parameter
+                expression { params.DESTROY == true } // Optionally controlled by a parameter
             }
             steps {
                 dir('terraform') {
