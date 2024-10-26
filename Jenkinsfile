@@ -4,14 +4,13 @@ pipeline {
     tools {
         maven 'Maven'
     }
-     stages {
+    stages {
         stage('Git Checkout') {
             steps {
                 echo 'This stage is to clone the repo from GitHub'
                 git branch: 'master', url: 'https://github.com/Vijaya150/star-agile-health-care.git'
             }
         }
-     }
         stage('Create Package') {
             steps {
                 echo 'This stage will compile, test, package my application'
@@ -21,7 +20,7 @@ pipeline {
         stage('Generate Test Report') {
             steps {
                 echo 'This stage generates Test report using TestNG'
-                publishHTML([
+                publishHTML([ 
                     allowMissing: false,
                     alwaysLinkToLastBuild: false,
                     keepAll: false,
@@ -61,37 +60,28 @@ pipeline {
                 }
             }
         }
-       stage('Provision Infrastructure') {
-         steps {
-        dir('terraform') {  // Ensure this matches your actual Terraform directory
-            withCredentials([[
-                $class: 'AmazonWebServicesCredentialsBinding',
-                credentialsId: 'Awsaccess'
-            ]]) {
-                sh '''
-                    terraform init
-                    terraform apply -auto-approve -var="AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" -var="AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
-                '''
+        stage('Provision Infrastructure') {
+            steps {
+                dir('terraform') { // Ensure this matches your actual Terraform directory
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'Awsaccess'
+                    ]]) {
+                        sh '''
+                            terraform init
+                            terraform apply -auto-approve -var="AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" -var="AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+                        '''
+                    }
+                }
             }
         }
-    }
-}
-      stage('Deploy to Kubernetes Test Environment') {
+        stage('Deploy to Kubernetes Test Environment') {
             steps {
                 script {
                     sh "kubectl --context=kubernetes-context apply -f k8s/test-deployment.yml"
                 }
             }
         }
-
-     stage('Deploy to Kubernetes Test Environment') {
-            steps {
-                script {
-                    sh "kubectl --context=kubernetes-context apply -f k8s/test-deployment.yml"
-                }
-            }
-        }
-
         stage('Deploy to Kubernetes Production Environment') {
             when {
                 expression { currentBuild.currentResult == 'SUCCESS' }
@@ -102,7 +92,12 @@ pipeline {
                 }
             }
         }
+        // Optional: Cleanup stage
+        stage('Cleanup') {
+            steps {
+                echo 'Cleaning up unused Docker images'
+                sh 'docker image prune -f'
+            }
+        }
+    }
 }
-
-
-
