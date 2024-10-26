@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: healthcare-prod-deployment
+  labels:
+    environment: production
+spec:
+  replicas: 3  # Number of replicas for production environment (can increase as needed)
+  selector:
+    matchLabels:
+      app: helathcare-app
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: healthcare-app
+        environment: production
+    spec:
+      containers:
+      - name: healthcare-container
+        image: vijayadarshini/healthcare:1.0 # Use a stable version for production
+        ports:
+        - containerPort: 8081  # Set this to match the production app port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: healthcare-prod-service
+  labels:
+    environment: production
+spec:
+  type: LoadBalancer
+  selector:
+    app: healthcare-app
+    environment: production
+  ports:
+  - protocol: TCP
+    port: 443             # External port for HTTPS in production (optional)
+    targetPort: 8081      # Match this to the container port in production
