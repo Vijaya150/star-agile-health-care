@@ -4,14 +4,14 @@ pipeline {
     tools {
         maven 'Maven'
     }
-
-    stages {
+     stages {
         stage('Git Checkout') {
             steps {
                 echo 'This stage is to clone the repo from GitHub'
                 git branch: 'master', url: 'https://github.com/Vijaya150/star-agile-health-care.git'
             }
         }
+     }
         stage('Create Package') {
             steps {
                 echo 'This stage will compile, test, package my application'
