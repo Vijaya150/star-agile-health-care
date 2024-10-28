@@ -75,23 +75,6 @@ pipeline {
                 }
             }
         }
-         stage('Destroy Infrastructure') {
-    when {
-        expression { return params.DESTROY }
-    }
-    steps {
-        echo 'Destroying infrastructure...'
-        dir('terraform') {
-            withCredentials([[ 
-                $class: 'AmazonWebServicesCredentialsBinding',
-                credentialsId: 'Awsaccess'
-            ]]) {
-                sh '''
-                    terraform destroy -auto-approve -var="AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" -var="AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
-                '''
-            }
-        }
-    }
+
 }
-    }
 }
