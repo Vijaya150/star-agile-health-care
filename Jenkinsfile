@@ -1,8 +1,11 @@
 pipeline {
   agent any
-     tools {
-       maven 'M2_HOME'
-           }
+     
+  tools {
+        jdk 'Java_home'         // Name of JDK configured in "Global Tool Configuration"
+        maven 'Maven'           // Name of Maven configured in "Global Tool Configuration"
+        dockerTool 'Docker'  // Use this only if you configured Docker in Jenkins
+    }
      
   stages {
     stage('Git Checkout') {
