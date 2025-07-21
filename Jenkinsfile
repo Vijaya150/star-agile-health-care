@@ -43,7 +43,7 @@ pipeline {
             withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
             sh '''
             kubectl apply -f app-deploy.yml
-            kubectl get svc'
+            kubectl get svc
             '''
       }
         }
