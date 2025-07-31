@@ -18,10 +18,7 @@ pipeline {
          stage('Deploy to k8s') {
         steps {
             withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
-            sh '''
-            kubectl apply -f app-deploy.yml
-            kubectl get svc
-            '''
+            sh 'kubectl apply -f sonarqube.yml'
       }
         }
          }
@@ -35,6 +32,9 @@ pipeline {
                         -Dsonar.host.url=http://16.16.167.86:9001/
                     '''
                     echo 'SonarQube Analysis Completed'
+  }
+}
+    }
   }
 }
 
