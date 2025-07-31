@@ -2,9 +2,9 @@ pipeline {
   agent any
      
   tools {
-        jdk 'Java_home'         // Name of JDK configured in "Global Tool Configuration"
-        maven 'Maven'           // Name of Maven configured in "Global Tool Configuration"
-        dockerTool 'Docker'  // Use this only if you configured Docker in Jenkins
+        jdk 'Java_home'         
+        maven 'Maven'           
+        dockerTool 'Docker'  
     }
   
   stages {
@@ -14,8 +14,6 @@ pipeline {
         git branch: 'testbranch', url: 'https://github.com/Vijaya150/star-agile-health-care.git'
                         }
             }
-    
-    
   
          stage('Deploy to k8s') {
         steps {
@@ -27,6 +25,16 @@ pipeline {
       }
         }
          }
+    stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('ServerNameSonar') {
+                    sh '''
+                        mvn clean verify sonar:sonar \
+                        -Dsonar.projectKey=sonar-analysis \
+                        -Dsonar.projectName=sonar-analysis \
+                        -Dsonar.host.url=http://16.16.167.86:9001/
+                    '''
+                    echo 'SonarQube Analysis Completed'
   }
 }
 
