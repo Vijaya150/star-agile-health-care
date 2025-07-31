@@ -29,5 +29,12 @@ pipeline {
         }
       }
     }
+  
+  stage('Build with maven') {
+    steps {
+      sh 'mvn clean install'
+       echo 'Maven Build Completed'
+    }
   }
-}
+  }
+    }
