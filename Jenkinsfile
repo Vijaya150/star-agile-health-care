@@ -14,14 +14,7 @@ pipeline {
         git branch: 'testbranch', url: 'https://github.com/Vijaya150/star-agile-health-care.git'
                         }
             }
-  
-         stage('Deploy to k8s') {
-        steps {
-            withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
-            sh 'kubectl apply -f sonarqube.yml'
-      }
-        }
-         }
+
   }
 }
 
