@@ -16,6 +16,19 @@ pipeline {
             }
 
   }
+  stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('ServerNameSonar') {
+                    sh '''
+                        mvn clean verify sonar:sonar \
+                        -Dsonar.projectKey=sonar-analysis \
+                        -Dsonar.projectName=sonar-analysis \
+                        -Dsonar.host.url=http://18.118.144.205:30900/
+                    '''
+                    echo 'SonarQube Analysis Completed'
+  }
+}
+    }
 }
 
 
