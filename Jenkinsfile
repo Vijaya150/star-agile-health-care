@@ -14,8 +14,6 @@ pipeline {
         git branch: 'testbranch', url: 'https://github.com/Vijaya150/star-agile-health-care.git'
                         }
             }
-
-  }
   stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('ServerNameSonar') {
@@ -30,5 +28,5 @@ pipeline {
 }
     }
 }
-
+}
 
