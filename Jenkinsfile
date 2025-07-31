@@ -16,7 +16,7 @@ pipeline {
             }
   stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('ServerNameSonar') {
+               withCredentials([string(credentialsId: 'sonar-scanner', variable: 'token')]) {
                     sh '''
                         mvn clean verify sonar:sonar \
                         -Dsonar.projectKey=sonar-analysis \
