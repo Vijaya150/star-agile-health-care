@@ -22,6 +22,8 @@ pipeline {
                         -Dsonar.projectKey=sonar-analysis \
                         -Dsonar.projectName=sonar-analysis \
                         -Dsonar.host.url=http://18.118.144.205:30900/
+                        -Dsonar.token=$token
+
                     '''
                     echo 'SonarQube Analysis Completed'
   }
