@@ -17,6 +17,7 @@ pipeline {
     stage('Deploy to k8s') {
         steps {
             withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
+            sh 'kubectl apply -f pv-pvc.yml'
             sh 'kubectl apply -f sonarqube.yml'
             }
         }
