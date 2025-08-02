@@ -45,22 +45,6 @@ pipeline {
         echo 'Maven build completed.'
       }
     }
-
-    stage('Deploy Nexus on k8s') {
-      steps {
-        withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
-          sh 'kubectl label node ip-172-31-9-59 workload=nexus --overwrite'
-          sh 'kubectl apply -f nexus.yml'
-        }
-      }
-    }
-
-    stage('Upload Artifact to Nexus') {
-      steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-          sh 'mvn deploy -DskipTests --settings settings.xml'
-        }
-      }
-    }
   }
 }
+
