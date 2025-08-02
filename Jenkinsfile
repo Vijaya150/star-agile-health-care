@@ -52,5 +52,20 @@ stage('Nexus to k8s') {
             }
         }
     }
+stage('Upload Artifact to Nexus') {
+  steps {
+    withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+      sh """
+        mvn deploy \
+          -DaltDeploymentRepository=nexus-ci::default::http://3.135.195.40:30801/repository/maven-ci-releases/ \
+          -Dnexus.username=$USERNAME \
+          -Dnexus.password=$PASSWORD
+      """
+    }
   }
+}
+
+  }
+}
+
 }
