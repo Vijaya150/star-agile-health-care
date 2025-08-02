@@ -44,21 +44,21 @@
 
   <build>
     <plugins>
-      <!-- Regular JAR (needed for deploy) -->
+      <!-- Standard JAR -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.3.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>com.project.staragile.Application</mainClass> <!-- Replace with your main class -->
+            </manifest>
+          </archive>
+        </configuration>
       </plugin>
 
-      <!-- Spring Boot repackage as executable JAR with classifier -->
+      <!-- Executable Spring Boot JAR -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -68,11 +68,11 @@
             <goals>
               <goal>repackage</goal>
             </goals>
+            <configuration>
+              <classifier>exec</classifier>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <classifier>exec</classifier>
-        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -89,4 +89,5 @@
       <url>http://3.135.195.40:30801/repository/maven-ci-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
+
 </project>
