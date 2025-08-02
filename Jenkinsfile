@@ -6,6 +6,15 @@ pipeline {
     maven 'Maven'
     dockerTool 'Docker'
   }
+  options {
+        skipDefaultCheckout()
+    }
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                deleteDir() // Deletes the workspace content
+            }
+        }
 
   stages {
     stage('Git Checkout') {
