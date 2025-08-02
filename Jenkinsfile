@@ -1,22 +1,23 @@
 pipeline {
-  agent any
+  agent any 
 
   tools {
     jdk 'Java_home'
     maven 'Maven'
     dockerTool 'Docker'
   }
+
   options {
-        skipDefaultCheckout()
-    }
-    stages {
-        stage('Clean Workspace') {
-            steps {
-                deleteDir() // Deletes the workspace content
-            }
-        }
+    skipDefaultCheckout()
+  }
 
   stages {
+    stage('Clean Workspace') {
+      steps {
+        deleteDir() // ✅ Clean workspace before build starts
+      }
+    }
+
     stage('Git Checkout') {
       steps {
         echo 'Cloning repository...'
@@ -47,15 +48,15 @@ pipeline {
         }
       }
     }
-stage('Build and Deploy to Nexus') {
-  steps {
-    withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-      sh 'mvn clean install -DskipTests'
-      sh 'mvn deploy -DskipTests --settings settings.xml'
-      echo 'Artifact built and deployed to Nexus successfully.'
+
+    stage('Build and Deploy to Nexus') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          sh 'mvn clean install -DskipTests'
+          sh 'mvn deploy -DskipTests --settings settings.xml'
+          echo 'Artifact built and deployed to Nexus successfully.'
+        }
+      }
     }
   }
-}
-  }
-}
 }
