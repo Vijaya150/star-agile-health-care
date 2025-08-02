@@ -38,11 +38,12 @@ pipeline {
         }
       }
     }
-
-    stage('Build with Maven') {
+stage('Build and Deploy to Nexus') {
       steps {
-        sh 'mvn clean install'
-        echo 'Maven build completed.'
+        withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          sh 'mvn clean deploy -DskipTests --settings settings.xml'
+          echo 'Artifact built and deployed to Nexus successfully.'
+        }
       }
     }
   }
