@@ -67,5 +67,3 @@ stage('Upload Artifact to Nexus') {
 
   }
 }
-
-}
