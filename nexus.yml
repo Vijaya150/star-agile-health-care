@@ -40,7 +40,7 @@ spec:
         app: nexus
     spec:
       nodeSelector:
-        node-type: high-memory
+        workload: nexus
       containers:
         - name: nexus
           image: sonatype/nexus3
