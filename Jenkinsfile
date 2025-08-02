@@ -45,7 +45,7 @@ pipeline {
     }
    stage('Upload Artifact to Nexus') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        withMaven(globalMavenSettingsConfig: 'settings.xml', jdk: 'Java_home', maven: 'Maven', mavenSettingsConfig: '', traceability: true) {
           sh 'mvn deploy'
         }
       }
