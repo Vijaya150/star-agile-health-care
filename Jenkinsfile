@@ -49,9 +49,6 @@ stage('Build and Deploy to Nexus') {
 }
   }
 }
-
-        }
-      }
     }
   }
 }
