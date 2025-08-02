@@ -43,6 +43,14 @@ pipeline {
           sh 'mvn clean install'
       }
     }
-  }
+   stage('Upload Artifact to Nexus') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          sh 'mvn deploy'
+        }
+      }
+    } 
+    
+    }
 }
 
