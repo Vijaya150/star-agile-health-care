@@ -38,14 +38,11 @@ pipeline {
       }
     }
 
-    stage('Build and Deploy to Nexus') {
+   stage('Build') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-          sh 'mvn clean install -DskipTests'
-          sh 'mvn deploy -DskipTests --settings settings.xml'
-          echo 'Artifact built and deployed to Nexus successfully.'
-        }
+          sh 'mvn clean install'
       }
     }
   }
 }
+
