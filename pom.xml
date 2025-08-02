@@ -44,21 +44,20 @@
 
   <build>
     <plugins>
-      <!-- Standard JAR -->
+      <!-- Standard plain JAR for Maven deploy -->
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.3.0</version>
         <configuration>
           <archive>
             <manifest>
-              <addClasspath>true</addClasspath>
-              <mainClass>com.project.staragile.Application</mainClass> <!-- Replace with your main class -->
+              <mainClass>com.project.staragile.MedicureApplication</mainClass> <!-- Replace if needed -->
             </manifest>
           </archive>
         </configuration>
       </plugin>
 
-      <!-- Executable Spring Boot JAR -->
+      <!-- Executable fat JAR with classifier to avoid replacing main JAR -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
