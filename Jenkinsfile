@@ -44,12 +44,18 @@ pipeline {
       }
     }
    stage('Upload Artifact to Nexus') {
-      steps {
-        withMaven(globalMavenSettingsConfig: 'settings.xml', jdk: 'Java_home', maven: 'Maven', mavenSettingsConfig: '', traceability: true) {
-          sh 'mvn deploy'
-        }
-      }
-    } 
+  steps {
+    withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+      sh '''
+        mvn deploy \
+          -DaltDeploymentRepository=snapshots::default::http://3.145.57.193:30801/repository/maven-snapshots/ \
+          -Dusername=$USERNAME \
+          -Dpassword=$PASSWORD
+      '''
+    }
+  }
+}
+
     
     }
 }
