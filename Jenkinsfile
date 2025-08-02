@@ -58,7 +58,7 @@ pipeline {
     stage('Upload Artifact to Nexus') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-          sh 'mvn deploy --settings settings.xml'
+          sh 'mvn deploy -DskipTests --settings settings.xml'
         }
       }
     }
