@@ -76,19 +76,6 @@
     </plugins>
   </build>
 
-  <distributionManagement>
-    <repository>
-      <id>nexus</id>
-      <name>Releases</name>
-      <url>http://3.135.195.40:30801/repository/maven-ci-releases/</url>
-    </repository>
-    <snapshotRepository>
-      <id>nexus</id>
-      <name>Snapshots</name>
-      <url>http://3.135.195.40:30801/repository/maven-ci-snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
-
    <distributionManagement>
         <repository>
             <id>maven-releases</id>
