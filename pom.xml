@@ -89,4 +89,16 @@
     </snapshotRepository>
   </distributionManagement>
 
+   <distributionManagement>
+        <repository>
+            <id>maven-releases</id>
+            <url>http://3.145.57.193:30801/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven-snapshots</id>
+            <url>http://3.145.57.193:30801/repository/maven-snapshots/
+        </snapshotRepository>
+    </distributionManagement>
+       
+
 </project>
