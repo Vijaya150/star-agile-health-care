@@ -46,6 +46,17 @@ spec:
           image: sonarqube:community
           ports:
             - containerPort: 9000
+          volumeMounts:
+            - name: sonarqube-volume
+              mountPath: /opt/sonarqube/data
+            - name: sonarqube-volume
+              mountPath: /opt/sonarqube/extensions
+            - name: sonarqube-volume
+              mountPath: /opt/sonarqube/logs
+      volumes:
+       - name: sonarqube-volume
+         persistentVolumeClaim:
+           claimName: sonarqube-pvc
 ---
 apiVersion: v1
 kind: Service
