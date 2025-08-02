@@ -45,18 +45,8 @@ pipeline {
     }
    stage('Upload Artifact to Nexus') {
   steps {
-    withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-      sh '''
-        mvn deploy \
-          -DaltDeploymentRepository=snapshots::default::http://3.145.57.193:30801/repository/maven-snapshots/ \
-          -Dusername=$USERNAME \
-          -Dpassword=$PASSWORD
-      '''
+    nexusArtifactUploader artifacts: [[artifactId: 'spring-boot-starter-parent', classifier: '', file: 'target/medicure-0.0.1-SNAPSHOT.jar', type: '.jar']], credentialsId: 'nexus-creds', groupId: 'org.springframework.boot', nexusUrl: '3.145.57.193:30801', nexusVersion: 'nexus3', protocol: 'http', repository: 'snapshots', version: '2.7.4'
     }
   }
 }
-
-    
-    }
 }
-
