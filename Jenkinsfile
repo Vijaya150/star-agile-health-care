@@ -10,12 +10,12 @@ pipeline {
   stages {
     stage('Git Checkout') {
       steps {
-        echo 'This stage is to clone the repo from GitHub'
+        echo 'Cloning repository...'
         git branch: 'testbranch', url: 'https://github.com/Vijaya150/star-agile-health-care.git'
       }
     }
 
-    stage('Deploy sonarqube to k8s') {
+    stage('Deploy SonarQube to k8s') {
       steps {
         withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
           sh 'kubectl apply -f pv-pvc.yml'
@@ -34,22 +34,22 @@ pipeline {
               -Dsonar.host.url=http://18.191.14.2:30900 \
               -Dsonar.token=$token
           '''
-          echo 'SonarQube Analysis Completed'
+          echo 'SonarQube analysis completed.'
         }
       }
     }
 
-    stage('Build with maven') {
+    stage('Build with Maven') {
       steps {
         sh 'mvn clean package spring-boot:repackage -DskipTests'
-        echo 'Maven Build Completed'
+        echo 'Maven build completed.'
       }
     }
 
-    stage('Nexus to k8s') {
+    stage('Deploy Nexus on k8s') {
       steps {
         withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
-          sh 'kubectl label node ip-172-31-9-59 workload=nexus'
+          sh 'kubectl label node ip-172-31-9-59 workload=nexus --overwrite'
           sh 'kubectl apply -f nexus.yml'
         }
       }
