@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
-                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.7.4</version>
-    <relativePath/>
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>com.project.staragile</groupId>
   <artifactId>medicure</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
-
   <name>medicure</name>
-  <description>Industry ready project based on Health Care Domain</description>
+  <description>Industry ready project on Health Care Domain</description>
 
   <properties>
     <java.version>1.8</java.version>
@@ -48,7 +44,7 @@
 
   <build>
     <plugins>
-      <!-- Ensure a proper .jar is created for Nexus -->
+      <!-- JAR plugin to package standard JAR -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -62,13 +58,10 @@
         </executions>
       </plugin>
 
-      <!-- Spring Boot plugin (no classifier override) -->
+      <!-- Spring Boot plugin (no classifier) -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <classifier></classifier>
-        </configuration>
       </plugin>
     </plugins>
   </build>
