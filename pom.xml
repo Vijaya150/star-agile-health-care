@@ -6,8 +6,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.7.4</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+		<relativePath/> </parent>
 	<groupId>com.project.staragile</groupId>
 	<artifactId>medicure</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -46,4 +45,18 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<distributionManagement>
+	  <repository>
+	    <id>nexus</id>
+	    <name>Releases</name>
+	    <url>http://3.135.195.40:30801/repository/maven-ci-releases/</url>
+	  </repository>
+	  <snapshotRepository>
+	    <id>nexus</id>
+	    <name>Snapshots</name>
+	    <url>http://3.135.195.40:30801/repository/maven-ci-snapshots/</url>
+	  </snapshotRepository>
+	</distributionManagement>
+
 </project>
