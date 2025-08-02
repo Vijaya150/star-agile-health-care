@@ -17,7 +17,7 @@ pipeline {
     stage('Deploy to k8s') {
         steps {
             withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
-            sh 'kubectl apply -f sonarqube.yml node-type=high-memory'
+            sh 'kubectl apply -f sonarqube.yml'
             }
         }
     }
