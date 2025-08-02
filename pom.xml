@@ -25,11 +25,11 @@
     </properties>
 
     <distributionManagement>
-        <repository>
-            <id>nexus-ci</id>
-            <name>Nexus Release Repository</name>
-            <url>http://3.135.195.40:30801/repository/maven-ci-releases/</url>
-        </repository>
+        <snapshotRepository>
+           <id>nexus-ci</id>
+           <name>Nexus Snapshot Repository</name>
+           <url>http://3.135.195.40:30801/repository/maven-ci-snapshots/</url>
+        <snapshotRepository>
     </distributionManagement>
 
     <dependencies>
