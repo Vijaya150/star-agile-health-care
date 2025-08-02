@@ -6,18 +6,7 @@ pipeline {
     maven 'Maven'
     dockerTool 'Docker'
   }
-
-  options {
-    skipDefaultCheckout()
-  }
-
-  stages {
-    stage('Clean Workspace') {
-      steps {
-        deleteDir() // ✅ Clean workspace before build starts
-      }
-    }
-
+    stages {
     stage('Git Checkout') {
       steps {
         echo 'Cloning repository...'
