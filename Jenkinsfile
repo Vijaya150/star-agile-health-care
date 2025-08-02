@@ -14,13 +14,14 @@ pipeline {
         git branch: 'testbranch', url: 'https://github.com/Vijaya150/star-agile-health-care.git'
       }
     }
+
     stage('Deploy sonarqube to k8s') {
-        steps {
-            withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
-            sh 'kubectl apply -f pv-pvc.yml'
-            sh 'kubectl apply -f sonarqube.yml'
-            }
+      steps {
+        withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
+          sh 'kubectl apply -f pv-pvc.yml'
+          sh 'kubectl apply -f sonarqube.yml'
         }
+      }
     }
 
     stage('SonarQube Analysis') {
@@ -30,35 +31,36 @@ pipeline {
             mvn clean verify sonar:sonar \
               -Dsonar.projectKey=sonar-analysis \
               -Dsonar.projectName=sonar-analysis \
-              -Dsonar.host.url=http://18.191.14.2:30900\
+              -Dsonar.host.url=http://18.191.14.2:30900 \
               -Dsonar.token=$token
           '''
           echo 'SonarQube Analysis Completed'
         }
       }
     }
-  
-  stage('Build with maven') {
-    steps {
-      sh 'mvn clean install'
-       echo 'Maven Build Completed'
-    }
-  }
-stage('Nexus to k8s') {
-        steps {
-            withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
-            sh 'kubectl label node ip-172-31-9-59 workload=nexus'
-            sh 'kubectl apply -f nexus.yml'
-            }
-        }
-    }
-stage('Upload Artifact to Nexus') {
-  steps {
-    withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-     sh 'mvn clean deploy --settings settings.xml'
-    }
-  }
-}
 
+    stage('Build with maven') {
+      steps {
+        sh 'mvn clean package spring-boot:repackage -DskipTests'
+        echo 'Maven Build Completed'
+      }
+    }
+
+    stage('Nexus to k8s') {
+      steps {
+        withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
+          sh 'kubectl label node ip-172-31-9-59 workload=nexus'
+          sh 'kubectl apply -f nexus.yml'
+        }
+      }
+    }
+
+    stage('Upload Artifact to Nexus') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          sh 'mvn deploy --settings settings.xml'
+        }
+      }
+    }
   }
 }
