@@ -45,8 +45,7 @@ pipeline {
     }
    stage('Upload Artifact to Nexus') {
   steps {
-    nexusArtifactUploader artifacts: [[artifactId: 'spring-boot-starter-parent', classifier: '', file: 'target/medicure-0.0.1-SNAPSHOT.jar', type: '.jar']], credentialsId: 'nexus-creds', groupId: 'org.springframework.boot', nexusUrl: '3.145.57.193:30801', nexusVersion: 'nexus3', protocol: 'http', repository: 'snapshots', version: '2.7.4'
-    }
+    nexusArtifactUploader artifacts: [[artifactId: 'medicure', classifier: '', file: 'target/medicure-0.0.1-SNAPSHOT.jar', type: 'jar']], credentialsId: 'nexus-creds', groupId: 'com.project.staragile', nexusUrl: '3.145.57.193:30801', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: '0.0.1-SNAPSHOT'
   }
 }
 }
