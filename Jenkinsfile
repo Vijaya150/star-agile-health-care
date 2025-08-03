@@ -45,7 +45,7 @@ pipeline {
     }
    stage('Upload Artifact to Nexus') {
   steps {
-    nexusArtifactUploader artifacts: [[artifactId: 'medicure', classifier: '', file: 'target/medicure-0.0.1-SNAPSHOT.jar', type: 'jar']], credentialsId: 'nexus-creds', groupId: 'com.project.staragile', nexusUrl: '3.147.68.3:30801/', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: '0.0.1-SNAPSHOT'
+    nexusArtifactUploader artifacts: [[artifactId: 'medicure', classifier: '', file: 'target/medicure-0.0.1-SNAPSHOT.jar', type: 'jar']], credentialsId: 'nexus-creds', groupId: 'com.project.staragile', nexusUrl: '3.147.68.3:30801', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: '0.0.1-SNAPSHOT'
   }
 }
         stage('Download Artifact from Nexus') {
@@ -54,23 +54,23 @@ pipeline {
              sh '''
            curl -u $USERNAME:$PASSWORD \\
           -o medicure-0.0.1-SNAPSHOT.jar \\
-          http:/3.147.68.3:30801//repository/maven-snapshots/com/project/staragile/medicure/0.0.1-SNAPSHOT/medicure-0.0.1-SNAPSHOT.jar
+          http://3.147.68.3:30801//repository/maven-snapshots/com/project/staragile/medicure/0.0.1-SNAPSHOT/medicure-0.0.1-SNAPSHOT.jar
             '''
                 }
             }
         }
       stage('Build Docker Image') {
         steps {
-         sh 'docker build -t 3.147.68.3:30801/medicure:0.0.1-SNAPSHOT .'
-
+         sh 'docker build -t 3.147.68.3:30801/docker-hosted/medicure:0.0.1-SNAPSHOT .'
         }
       }
+     
       stage('Push Docker Image to Nexus') {
   steps {
     withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
       sh '''
         echo "$PASSWORD" | docker login 3.147.68.3:30801 -u "$USERNAME" --password-stdin
-        docker push 3.147.68.3:30801/medicure:0.0.1-SNAPSHOT
+        docker push 3.147.68.3:30801/docker-hosted/medicure:0.0.1-SNAPSHOT
       '''
     }
   }
