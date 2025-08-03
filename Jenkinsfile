@@ -61,7 +61,7 @@ pipeline {
         }
       stage('Build Docker Image') {
         steps {
-         sh 'docker build -t 3.147.68.3:30802/medicure:0.0.1-SNAPSHOT .'
+         sh 'docker build -t 3.147.68.3:30801/medicure:0.0.1-SNAPSHOT .'
 
         }
       }
