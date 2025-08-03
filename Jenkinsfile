@@ -61,7 +61,7 @@ pipeline {
         }
       stage('Build Docker Image') {
         steps {
-         sh 'docker build -t 3.147.68.3:30802/docker-hosted/SNAPSHOT .
+         sh 'docker build -t 3.147.68.3:30802/docker-hosted/SNAPSHOT .'
 
         }
       }
