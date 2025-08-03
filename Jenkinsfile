@@ -89,9 +89,6 @@ pipeline {
   }
 }
 
-      }
-    }
-
     stage('Push Docker Image to Nexus') {
   steps {
     withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -104,9 +101,5 @@ pipeline {
   }
 }
 
-          '''
-        }
-      }
     }
-  }
 }
