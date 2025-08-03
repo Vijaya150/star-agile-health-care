@@ -48,5 +48,16 @@ pipeline {
     nexusArtifactUploader artifacts: [[artifactId: 'medicure', classifier: '', file: 'target/medicure-0.0.1-SNAPSHOT.jar', type: 'jar']], credentialsId: 'nexus-creds', groupId: 'com.project.staragile', nexusUrl: '3.145.57.193:30801', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: '0.0.1-SNAPSHOT'
   }
 }
+        stage('Download Artifact from Nexus') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+             sh """
+           curl -u $NEXUS_USER:$NEXUS_PASS \\
+          -o medicure-0.0.1-SNAPSHOT.jar \\
+          http://3.145.57.193:30801/repository/maven-snapshots/com/project/staragile/medicure/0.0.1-SNAPSHOT/medicure-0.0.1-SNAPSHOT.jar
+            """
+                }
+            }
+        }
 }
 }
