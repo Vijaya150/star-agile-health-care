@@ -65,5 +65,16 @@ pipeline {
 
         }
       }
+      stage('Push Docker Image to Nexus') {
+  steps {
+    withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+      sh '''
+        echo "$PASSWORD" | docker login 3.147.68.3:30802 -u "$USERNAME" --password-stdin
+        docker push 3.147.68.3:30802/medicure:0.0.1-SNAPSHOT
+      '''
+    }
+  }
+}
+
     }
 }
