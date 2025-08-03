@@ -46,7 +46,7 @@ pipeline {
        stage('Deploy Nexus to k8s') {
       steps {
         withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
-          sh 'kubectl apply nexus.yml'
+          sh 'kubectl apply -f nexus.yml'
     }
 }
        }
