@@ -54,7 +54,7 @@ pipeline {
              sh '''
            curl -u $USERNAME:$PASSWORD \\
           -o medicure-0.0.1-SNAPSHOT.jar \\
-          http://3.147.68.3:30801//repository/maven-snapshots/com/project/staragile/medicure/0.0.1-SNAPSHOT/medicure-0.0.1-SNAPSHOT.jar
+          http:/3.147.68.3:30801//repository/maven-snapshots/com/project/staragile/medicure/0.0.1-SNAPSHOT/medicure-0.0.1-SNAPSHOT.jar
             '''
                 }
             }
