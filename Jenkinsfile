@@ -38,7 +38,7 @@ pipeline {
       }
     }
 
-   stage('Build') {
+   stage('Build with maven') {
       steps {
           sh 'mvn clean install'
       }
