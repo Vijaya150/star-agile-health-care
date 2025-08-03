@@ -84,17 +84,26 @@ pipeline {
     }
 
     stage('Build Docker Image') {
-      steps {
-        sh 'docker build -t 3.147.68.3:30500/medicure:0.0.1-SNAPSHOT .'
+  steps {
+    sh 'docker build -t medicure:0.0.1-SNAPSHOT .'
+  }
+}
+
       }
     }
 
     stage('Push Docker Image to Nexus') {
-      steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-          sh '''
-            echo "$PASSWORD" | docker login 3.147.68.3:30500 -u "$USERNAME" --password-stdin
-            docker push 3.147.68.3:30500/medicure:0.0.1-SNAPSHOT
+  steps {
+    withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+      sh '''
+        echo "$PASSWORD" | docker login 3.147.68.3:30500 -u "$USERNAME" --password-stdin
+        docker tag medicure:0.0.1-SNAPSHOT 3.147.68.3:30500/docker-hosted/medicure:0.0.1-SNAPSHOT
+        docker push 3.147.68.3:30500/docker-hosted/medicure:0.0.1-SNAPSHOT
+      '''
+    }
+  }
+}
+
           '''
         }
       }
