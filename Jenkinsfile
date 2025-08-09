@@ -1,12 +1,6 @@
 pipeline {
   agent any
      
-  tools {
-        jdk 'Java_home'         
-        maven 'Maven'           
-        dockerTool 'Docker' 
-    }
-     
   stages {
     stage('Git Checkout') {
       steps {
