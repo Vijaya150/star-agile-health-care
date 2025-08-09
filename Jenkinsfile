@@ -2,53 +2,18 @@ pipeline {
   agent any
      
   tools {
-        jdk 'Java_home'         // Name of JDK configured in "Global Tool Configuration"
-        maven 'Maven'           // Name of Maven configured in "Global Tool Configuration"
-        dockerTool 'Docker'  // Use this only if you configured Docker in Jenkins
+        jdk 'Java_home'        
+        maven 'Maven'          
+        dockerTool 'Docker'  
     }
      
   stages {
     stage('Git Checkout') {
       steps {
         echo 'This stage is to clone the repo from github'
-        git branch: 'master', url: 'https://github.com/Vijaya150/star-agile-health-care.git'
+        git branch: 'vijaya-dev', url: 'https://github.com/Vijaya150/star-agile-health-care.git'
                         }
             }
-    stage('Build stage') {
-      steps {
-        echo 'This stage will compile, test, package my application'
-        sh 'mvn clean install'
-                          }
-            }
-    
-     stage('Create Docker Image') {
-      steps {
-        echo 'This stage will Create a Docker image'
-        sh 'docker build -t vijayadarshini/healthcare:1.0 .'
-                          }
-            }
-     stage('Docker login & Push') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-            sh '''
-                echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                docker push vijayadarshini/healthcare:1.0
-            '''
-            }
-         }
-     }
-  
-         stage('Deploy to k8s') {
-        steps {
-            withCredentials([file(credentialsId: 'kubeconfig-prod', variable: 'KUBECONFIG')]) {
-            sh '''
-            kubectl apply -f app-deploy.yml
-            kubectl get svc
-            '''
-      }
-        }
-         }
   }
 }
-
 
