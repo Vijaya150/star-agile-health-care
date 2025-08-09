@@ -16,7 +16,7 @@ pipeline {
             mvn clean verify sonar:sonar \
               -Dsonar.projectKey=sonar-analysis \
               -Dsonar.projectName=sonar-analysis \
-              -Dsonar.host.url=http://18.191.218.84:30900 \
+              -Dsonar.host.url=http://35.170.192.171:30800 \
               -Dsonar.token=$token
           '''
           echo 'SonarQube analysis completed.'
