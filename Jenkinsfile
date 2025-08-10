@@ -42,20 +42,20 @@ pipeline {
 }
     stage('Build Docker Image') {
   steps {
-    sh 'docker build -t 13.220.201.91:30500/medicure:0.0.1-SNAPSHOT .'
+    sh 'docker build -t medicure:latest .'
   }
 }
-    stage('Push Docker Image to Nexus') {
+
+stage('Tag and Push Docker Image to Nexus') {
   steps {
     withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
       sh '''
+        docker tag medicure:latest 13.220.201.91:30500/medicure:0.0.1-SNAPSHOT
         echo "$PASSWORD" | docker login 13.220.201.91:30500 -u "$USERNAME" --password-stdin
         docker push 13.220.201.91:30500/medicure:0.0.1-SNAPSHOT
       '''
     }
   }
-
+}
   }
 }
-}
-
