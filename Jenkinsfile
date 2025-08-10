@@ -16,7 +16,7 @@ pipeline {
             mvn clean verify sonar:sonar \
               -Dsonar.projectKey=sonar-analysis \
               -Dsonar.projectName=sonar-analysis \
-              -Dsonar.host.url=http://35.170.192.171:30800 \
+              -Dsonar.host.url=http://54.147.195.218:30800 \
               -Dsonar.token=$token
           '''
           echo 'SonarQube analysis completed.'
@@ -30,25 +30,16 @@ pipeline {
     }
 
     stage('Upload Artifact to Nexus') {
-      steps {
-        nexusArtifactUploader(
-          artifacts: [[
-            artifactId: 'medicure',
-            classifier: '',
-            file: 'target/medicure-0.0.1-SNAPSHOT.jar',
-            type: 'jar'
-          ]],
-          credentialsId: 'nexus-creds',
-          groupId: 'com.project.staragile',
-          nexusUrl: '54.88.56.91:30081',
-          nexusVersion: 'nexus3',
-          protocol: 'http',
-          repository: 'maven-snapshots',
-          version: '0.0.1-SNAPSHOT'
-        )
-      }
+  steps {
+    withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+      sh """
+        curl -v -u $USERNAME:$PASSWORD \
+          --upload-file target/medicure-0.0.1-SNAPSHOT.jar \
+          http://13.220.201.91:30081/repository/maven-snapshots/com/project/staragile/medicure/0.0.1-SNAPSHOT/medicure-0.0.1-SNAPSHOT.jar
+      """
     }
-
+  }
+}
   }
 }
 
