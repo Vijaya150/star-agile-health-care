@@ -40,6 +40,12 @@ pipeline {
     }
   }
 }
+    stage('Build Docker Image') {
+  steps {
+    sh 'docker build -t 13.220.201.91:30500/medicure:0.0.1-SNAPSHOT .'
+  }
+}
+
 
   }
 }
