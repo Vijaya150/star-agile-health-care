@@ -49,7 +49,7 @@ pipeline {
   steps {
     withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
       sh '''
-        echo "$PASSWORD" | docker login 3.147.68.3:30500 -u "$USERNAME" --password-stdin
+        echo "$PASSWORD" | docker login 13.220.201.91:30500 -u "$USERNAME" --password-stdin
         docker push 13.220.201.91:30500/medicure:0.0.1-SNAPSHOT
       '''
     }
