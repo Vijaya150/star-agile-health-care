@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: medicure
-          image: 13.220.201.91:30500/medicure:0.0.1-SNAPSHOT
+          image: 54.208.219.146:30500/medicure:0.0.1-SNAPSHOT
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -34,4 +34,5 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8080
-  type: ClusterIP
+      nodePort: 30080
+  type: Nodeport
