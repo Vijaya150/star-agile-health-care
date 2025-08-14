@@ -65,20 +65,20 @@ stage('Tag and Push Docker Image to Nexus') {
         dir('star-agile-health-care') { deleteDir() }
 
         sh """
-          git clone -b vijaya-dev https://$GITHUB_TOKEN@github.com/Vijaya150/star-agile-health-care.git
+          git clone -b gitops-manifests https://$GITHUB_TOKEN@github.com/Vijaya150/star-agile-health-care.git
           cd star-agile-health-care
 
-          # Update image only if different
-          if ! grep -q "image: 54.208.219.146:30500/medicure:${IMAGE_TAG}" argocd/medicure.yml; then
-            sed -i "s|image:.*|image: 54.208.219.146:30500/medicure:${IMAGE_TAG}|" argocd/medicure.yml
-            git config user.email "jenkins@ci"
-            git config user.name "Jenkins CI"
-            git commit -am "Update image tag to ${IMAGE_TAG} [skip ci]"
-            git push origin vijaya-dev
-          else
-            echo "Image tag is already up-to-date, no commit needed."
-          fi
+          # Update image tag
+          sed -i "s|image:.*|image: 54.208.219.146:30500/medicure:${IMAGE_TAG}|" argocd/medicure.yml
+          git config user.email "jenkins@ci"
+          git config user.name "Jenkins CI"
+          git commit -am "Update image tag to ${IMAGE_TAG}"
+          git push origin gitops-manifests
         """
+      }
+    }
+  }
+}
       }
     }
   }
