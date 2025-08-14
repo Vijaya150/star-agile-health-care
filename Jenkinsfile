@@ -57,5 +57,23 @@ stage('Tag and Push Docker Image to Nexus') {
     }
   }
 }
+    stage('Update GitOps Repo for Argo CD') {
+    steps {
+        script {
+            def IMAGE_TAG = "0.0.1-${env.BUILD_NUMBER}"
+            sh """
+                git clone https://github.com/Vijaya150/star-agile-health-care.git
+                cd star-agile-health-care
+                git checkout vijaya-dev
+                sed -i 's|image:.*|image: 54.208.219.146:30500/medicure:${IMAGE_TAG}|' argocd/deployment.yaml
+                git config user.email "jenkins@ci"
+                git config user.name "Jenkins CI"
+                git commit -am "Update image tag to ${IMAGE_TAG}"
+                git push origin vijaya-dev
+            """
+        }
+    }
+}
   }
 }
+
