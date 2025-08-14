@@ -57,7 +57,7 @@ stage('Tag and Push Docker Image to Nexus') {
     }
   }
 }
- stage('Update GitOps Repo for Argo CD') {
+    stage('Update GitOps Repo for Argo CD') {
   steps {
     withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
       script {
@@ -67,17 +67,25 @@ stage('Tag and Push Docker Image to Nexus') {
         sh """
           git clone -b vijaya-dev https://$GITHUB_TOKEN@github.com/Vijaya150/star-agile-health-care.git
           cd star-agile-health-care
-          sed -i 's|image:.*|image: 54.208.219.146:30500/medicure:${IMAGE_TAG}|' argocd/medicure.yml
-          git config user.email "jenkins@ci"
-          git config user.name "Jenkins CI"
 
-          # Only commit and push if there are changes
-          if ! git diff --quiet; then
+          # Update image only if different
+          if ! grep -q "image: 54.208.219.146:30500/medicure:${IMAGE_TAG}" argocd/medicure.yml; then
+            sed -i "s|image:.*|image: 54.208.219.146:30500/medicure:${IMAGE_TAG}|" argocd/medicure.yml
+            git config user.email "jenkins@ci"
+            git config user.name "Jenkins CI"
             git commit -am "Update image tag to ${IMAGE_TAG}"
             git push origin vijaya-dev
+          else
+            echo "Image tag is already up-to-date, no commit needed."
           fi
         """
       }
+    }
+  }
+}
+  }
+}
+     }
     }
   }
 }
