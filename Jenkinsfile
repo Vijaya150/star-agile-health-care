@@ -51,7 +51,7 @@ stage('Tag and Push Docker Image to Nexus') {
     withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
       sh '''
         docker tag medicure:latest 54.208.219.146:30500/medicure:0.0.1-SNAPSHOT
-        echo "$PASSWORD" | docker login 13.220.201.91:30500 -u "$USERNAME" --password-stdin
+        echo "$PASSWORD" | docker login 54.208.219.146:30500 -u "$USERNAME" --password-stdin
         docker push  54.208.219.146:30500/medicure:0.0.1-SNAPSHOT
       '''
     }
