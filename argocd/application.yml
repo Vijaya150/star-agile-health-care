@@ -4,11 +4,11 @@ metadata:
   name: medicure
   namespace: argocd
 spec:
-  project: default
+  project: k8s-deploy
   source:
     repoURL: https://github.com/Vijaya150/star-agile-health-care.git
     targetRevision: vijaya-dev
-    path: medicure
+    path: argocd
   destination:
     server: https://172.31.89.84:6443
     namespace: prod
