@@ -85,10 +85,3 @@ stage('Tag and Push Docker Image to Nexus') {
 }
   }
 }
-     }
-    }
-  }
-}
-
-}
-  }
