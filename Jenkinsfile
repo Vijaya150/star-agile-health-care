@@ -73,7 +73,7 @@ stage('Tag and Push Docker Image to Nexus') {
             sed -i "s|image:.*|image: 54.208.219.146:30500/medicure:${IMAGE_TAG}|" argocd/medicure.yml
             git config user.email "jenkins@ci"
             git config user.name "Jenkins CI"
-            git commit -am "Update image tag to ${IMAGE_TAG}"
+            git commit -am "Update image tag to ${IMAGE_TAG} [skip ci]"
             git push origin vijaya-dev
           else
             echo "Image tag is already up-to-date, no commit needed."
