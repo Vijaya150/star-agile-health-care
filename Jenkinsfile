@@ -16,7 +16,7 @@ pipeline {
             mvn clean verify sonar:sonar \
               -Dsonar.projectKey=sonar-analysis \
               -Dsonar.projectName=sonar-analysis \
-              -Dsonar.host.url=http://54.147.195.218:30800 \
+              -Dsonar.host.url=http://3.82.99.158:30800 \
               -Dsonar.token=$token
           '''
           echo 'SonarQube analysis completed.'
@@ -35,7 +35,7 @@ pipeline {
       sh """
         curl -v -u $USERNAME:$PASSWORD \
           --upload-file target/medicure-0.0.1-SNAPSHOT.jar \
-          http://13.220.201.91:30081/repository/maven-snapshots/com/project/staragile/medicure/0.0.1-SNAPSHOT/medicure-0.0.1-SNAPSHOT.jar
+          http://54.208.219.146:30081/repository/maven-snapshots/com/project/staragile/medicure/0.0.1-SNAPSHOT/medicure-0.0.1-SNAPSHOT.jar
       """
     }
   }
@@ -50,9 +50,9 @@ stage('Tag and Push Docker Image to Nexus') {
   steps {
     withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
       sh '''
-        docker tag medicure:latest 13.220.201.91:30500/medicure:0.0.1-SNAPSHOT
+        docker tag medicure:latest 54.208.219.146:30500/medicure:0.0.1-SNAPSHOT
         echo "$PASSWORD" | docker login 13.220.201.91:30500 -u "$USERNAME" --password-stdin
-        docker push 13.220.201.91:30500/medicure:0.0.1-SNAPSHOT
+        docker push  54.208.219.146:30500/medicure:0.0.1-SNAPSHOT
       '''
     }
   }
