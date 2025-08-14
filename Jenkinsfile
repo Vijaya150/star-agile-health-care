@@ -65,7 +65,7 @@ stage('Tag and Push Docker Image to Nexus') {
                 git clone https://github.com/Vijaya150/star-agile-health-care.git
                 cd star-agile-health-care
                 git checkout vijaya-dev
-                sed -i 's|image:.*|image: 54.208.219.146:30500/medicure:${IMAGE_TAG}|' argocd/deployment.yaml
+                sed -i 's|image:.*|image: 54.208.219.146:30500/medicure:${IMAGE_TAG}|' argocd/medicure.yml
                 git config user.email "jenkins@ci"
                 git config user.name "Jenkins CI"
                 git commit -am "Update image tag to ${IMAGE_TAG}"
