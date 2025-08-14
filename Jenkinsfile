@@ -74,7 +74,6 @@ stage('Tag and Push Docker Image to Nexus') {
           git commit -am "Update image tag to ${IMAGE_TAG}"
           git push origin vijaya-dev
         """
-        #Only commit and push if changes exist
               git diff --quiet || git commit -am "Update image tag to ${IMAGE_TAG}"
               git diff --quiet || git push origin vijaya-dev
       }
