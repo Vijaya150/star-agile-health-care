@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: medicure
-          image: 54.208.219.146:30500/medicure:0.0.1-23
+          image: 54.208.219.146:30500/medicure:0.0.1-24
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
