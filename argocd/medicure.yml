@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: medicure
+  namespace: prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: medicure
+  template:
+    metadata:
+      labels:
+        app: medicure
+    spec:
+      containers:
+        - name: medicure
+          image: 13.220.201.91:30500/medicure:0.0.1-SNAPSHOT
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+      imagePullSecrets:
+        - name: nexus-creds
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: medicure
+  namespace: prod
+spec:
+  selector:
+    app: medicure
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
