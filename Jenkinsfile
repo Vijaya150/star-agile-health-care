@@ -42,11 +42,6 @@ pipeline {
         echo "Saved last 5 analyses to sonar_last_5.json"
     }
 }
-
-        pipeline {
-    agent any
-
-    stages {
         stage('Build with Maven') {
             steps {
                 sh 'mvn clean package -DskipTests'
@@ -69,3 +64,4 @@ pipeline {
         }
     }
 }
+        
