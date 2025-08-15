@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SONARQUBE_SERVER = "http://44.202.13.37:30800"
-        DOCKER_REGISTRY = "100.26.183.71:30081/docker-hosted"
+        DOCKER_REGISTRY = "100.26.183.71:30091"  // NodePort for Docker registry
         IMAGE_NAME = "medicure-app"
         IMAGE_TAG = "0.0.1"
     }
@@ -76,7 +76,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh """
                         docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
-                        docker login $DOCKER_REGISTRY -u $USERNAME -p $PASSWORD
+                        echo $PASSWORD | docker login $DOCKER_REGISTRY -u $USERNAME --password-stdin
                         docker push $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
                     """
                 }
