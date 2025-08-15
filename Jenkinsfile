@@ -42,26 +42,27 @@ pipeline {
         echo "Saved last 5 analyses to sonar_last_5.json"
     }
 }
-        stage('Build with Maven') {
-            steps {
-                sh 'mvn clean package -DskipTests'
-            }
-        }
+      stage('Build with Maven') {
+    steps {
+        sh 'mvn clean package -DskipTests'
+    }
+}
 
-        stage('Deploy to Nexus') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'nexus-creds',
-                    usernameVariable: 'USERNAME',
-                    passwordVariable: 'PASSWORD'
-                )]) {
-                    sh """
-                        mvn deploy -DskipTests \
-                        -DaltDeploymentRepository=nexus::default::http://$USERNAME:$PASSWORD@100.26.183.71:30081/repository/maven-snapshots
-                    """
-                }
-            }
+stage('Deploy to Nexus') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'nexus-creds',
+            usernameVariable: 'USERNAME',
+            passwordVariable: 'PASSWORD'
+        )]) {
+            sh """
+                mvn deploy -DskipTests \
+                  -DaltDeploymentRepository=nexus::default::http://$USERNAME:$PASSWORD@100.26.183.71:30081/repository/maven-snapshots
+            """
         }
+    }
+}
+
     }
 }
         
