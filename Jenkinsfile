@@ -82,5 +82,33 @@ pipeline {
                 }
             }
         }
+
+        stage('Update K8s Manifests for ArgoCD') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'k8s-git-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+            sh """
+                # Clone GitOps repo
+                git clone https://$GIT_USER:$GIT_PASS@github.com/Vijaya150/star-agile-health-care.git
+                cd star-agile-health-care
+                git checkout gitops-manifests
+
+                # Update Deployment YAML with new Docker image
+                sed -i 's|image: .*|image: 100.26.183.71:30091/medicure-app:${IMAGE_TAG}|' medicure-deploy.yml
+
+                # Set Git config
+                git config user.name "Vijaya"
+                git config user.email "vijayadarshini1503@gmail.com"
+
+                # Stage both Deployment and Service YAMLs
+                git add medicure-deploy.yml service.yml
+
+                # Commit and push
+                git commit -m "Update medicure-app image to ${IMAGE_TAG} from Jenkins build #${BUILD_NUMBER}"
+                git push origin gitops-manifests
+            """
+        }
+    }
+}
+
     }
 }
