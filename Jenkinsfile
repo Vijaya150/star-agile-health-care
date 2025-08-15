@@ -43,20 +43,29 @@ pipeline {
     }
 }
 
-        stage('Build') {
+        pipeline {
+    agent any
+
+    stages {
+        stage('Build with Maven') {
             steps {
                 sh 'mvn clean package -DskipTests'
-                archiveArtifacts '**/target/*.jar'
             }
         }
 
-        stage('Upload to Nexus') {
+        stage('Deploy to Nexus') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    sh 'curl -u $USER:$PASS --upload-file target/medicure-0.0.1-SNAPSHOT.jar http://100.26.183.71:30081/repository/maven-releases/medicure-0.0.1-SNAPSHOT.jar'
+                withCredentials([usernamePassword(
+                    credentialsId: 'nexus-creds',
+                    usernameVariable: 'USERNAME',
+                    passwordVariable: 'PASSWORD'
+                )]) {
+                    sh """
+                        mvn deploy -DskipTests \
+                        -DaltDeploymentRepository=nexus::default::http://$USERNAME:$PASSWORD@100.26.183.71:30081/repository/maven-snapshots
+                    """
                 }
             }
         }
-
     }
 }
