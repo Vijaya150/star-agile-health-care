@@ -3,6 +3,9 @@ pipeline {
 
     environment {
         SONARQUBE_SERVER = "http://44.202.13.37:30800"
+        DOCKER_REGISTRY = "100.26.183.71:30081/docker-hosted"
+        IMAGE_NAME = "medicure-app"
+        IMAGE_TAG = "0.0.1"
     }
 
     stages {
@@ -57,6 +60,24 @@ pipeline {
                         curl -u $USERNAME:$PASSWORD \
                           --upload-file target/medicure-0.0.1-SNAPSHOT.jar \
                           http://100.26.183.71:30081/repository/maven-snapshots/com/project/staragile/medicure/0.0.1-SNAPSHOT/medicure-0.0.1-SNAPSHOT.jar
+                    """
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t $IMAGE_NAME:$IMAGE_TAG ."
+            }
+        }
+
+        stage('Tag & Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh """
+                        docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+                        docker login $DOCKER_REGISTRY -u $USERNAME -p $PASSWORD
+                        docker push $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
                     """
                 }
             }
