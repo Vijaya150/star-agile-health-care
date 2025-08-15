@@ -4,7 +4,7 @@ metadata:
   name: medicure
   namespace: prod
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: medicure
@@ -15,23 +15,9 @@ spec:
     spec:
       containers:
         - name: medicure
-          image: 54.208.219.146:30500/medicure:0.0.1-7
+          image: 100.26.183.71:30091/medicure-app:0.0.1 
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
       imagePullSecrets:
         - name: nexus-creds
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: medicure
-  namespace: prod
-spec:
-  selector:
-    app: medicure
-  ports:
-    - port: 80
-      targetPort: 8080
-      nodePort: 30080
-  type: NodePort
