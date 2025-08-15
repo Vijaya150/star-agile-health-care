@@ -31,17 +31,18 @@ pipeline {
         }
 
         stage('Retrieve Last 5 Sonar Reports') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'sonar-admin', usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASS')]) {
-                    echo "Fetching last 5 SonarQube analyses..."
-                    sh '''
-                        curl -s -u $SONAR_USER:$SONAR_PASS "${SONARQUBE_SERVER}/api/project_analyses/search?project=${SONAR_PROJECT_KEY}" \
-                        | jq '.analyses | sort_by(.date) | reverse | .[0:5]' > sonar_last_5.json
-                    '''
-                }
-                echo "Saved last 5 analyses to sonar_last_5.json"
-            }
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'sonar-admin', usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASS')]) {
+            echo "Fetching last 5 SonarQube analyses..."
+            sh """
+                curl -s -u \$SONAR_USER:\$SONAR_PASS "${SONARQUBE_SERVER}/api/project_analyses/search?project=${SONAR_PROJECT_KEY}" \
+                | jq '.analyses | sort_by(.date) | reverse | .[0:5]' > sonar_last_5.json
+            """
         }
+        echo "Saved last 5 analyses to sonar_last_5.json"
+    }
+}
+
 
         stage('Build with Maven') {
             steps {
