@@ -43,12 +43,18 @@ pipeline {
     }
 }
 
-
-        stage('Build with Maven') {
+        stage('Build') {
             steps {
-                echo "Running Maven build..."
-                sh 'mvn clean install'
-                echo "Maven build completed."
+                sh 'mvn clean package -DskipTests'
+                archiveArtifacts '**/target/*.jar'
+            }
+        }
+
+        stage('Upload to Nexus') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    sh 'curl -u $USER:$PASS --upload-file target/medicure-0.0.1-SNAPSHOT.jar http://100.26.183.71:30081/repository/maven-releases/medicure-0.0.1-SNAPSHOT.jar'
+                }
             }
         }
 
