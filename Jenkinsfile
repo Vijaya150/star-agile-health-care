@@ -23,7 +23,8 @@ pipeline {
                           -Dsonar.projectKey=sonar-analysis \
                           -Dsonar.projectName=sonar-analysis \
                           -Dsonar.host.url=${SONARQUBE_SERVER} \
-                          -Dsonar.token=$token
+                          -Dsonar.token=$token \
+                          -Dsonar.buildString=${BUILD_NUMBER}
                     '''
                 }
                 echo 'SonarQube analysis completed.'
@@ -31,38 +32,34 @@ pipeline {
         }
 
         stage('Retrieve Last 5 Sonar Reports') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'sonar-admin', usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASS')]) {
-            echo "Fetching last 5 SonarQube analyses..."
-            sh """
-                curl -s -u \$SONAR_USER:\$SONAR_PASS "${SONARQUBE_SERVER}/api/project_analyses/search?project=sonar-analysis" \
-                | jq '.analyses | sort_by(.date) | reverse | .[0:5]' > sonar_last_5.json
-            """
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'sonar-admin', usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASS')]) {
+                    echo "Fetching last 5 SonarQube analyses..."
+                    sh """
+                        curl -s -u \$SONAR_USER:\$SONAR_PASS "${SONARQUBE_SERVER}/api/project_analyses/search?project=sonar-analysis" \
+                        | jq '.analyses | sort_by(.date) | reverse | .[0:5] | map({build: .version, date: .date, revision: .revision, key: .key})' > sonar_last_5.json
+                    """
+                }
+                echo "Saved last 5 analyses to sonar_last_5.json"
+            }
         }
-        echo "Saved last 5 analyses to sonar_last_5.json"
-    }
-}
-      stage('Build with Maven') {
-    steps {
-        sh 'mvn clean package -DskipTests'
-    }
-      }
 
-stage('Deploy to Nexus') {
-    steps {
-        withCredentials([usernamePassword(
-            credentialsId: 'nexus-creds',
-            usernameVariable: 'USERNAME',
-            passwordVariable: 'PASSWORD'
-        )]) {
-            sh """
-                mvn deploy -DskipTests \
-                  -DaltDeploymentRepository=nexus::default::http://$USERNAME:$PASSWORD@100.26.183.71:30081/repository/maven-snapshots
-            """
+        stage('Build with Maven') {
+            steps {
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Upload Artifact to Nexus') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh """
+                        curl -u $USERNAME:$PASSWORD \
+                          --upload-file target/medicure-0.0.1-SNAPSHOT.jar \
+                          http://100.26.183.71:30081/repository/maven-snapshots/com/project/staragile/medicure/0.0.1-SNAPSHOT/medicure-0.0.1-SNAPSHOT.jar
+                    """
+                }
+            }
         }
     }
 }
-    }
-}
-
-        
