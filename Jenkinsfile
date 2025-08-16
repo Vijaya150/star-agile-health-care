@@ -17,36 +17,22 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withCredentials([string(credentialsId: 'sonar-scanner', variable: 'token')]) {
-                    echo "Running SonarQube analysis..."
-                    sh '''
-                        mvn clean verify sonar:sonar \
-                          -Dsonar.projectKey=sonar-analysis \
-                          -Dsonar.projectName=sonar-analysis \
-                          -Dsonar.host.url=${SONARQUBE_SERVER} \
-                          -Dsonar.token=$token \
-                          -Dsonar.buildString=${BUILD_NUMBER}
-                    '''
-                }
-                echo 'SonarQube analysis completed.'
-            }
+       stage('SonarQube Analysis') {
+    steps {
+        withCredentials([string(credentialsId: 'sonar-scanner', variable: 'token')]) {
+            echo "Running SonarQube analysis..."
+            sh '''
+                mvn clean verify sonar:sonar \
+                  -Dsonar.projectKey=sonar-analysis \
+                  -Dsonar.projectName=sonar-analysis \
+                  -Dsonar.host.url=${SONARQUBE_SERVER} \
+                  -Dsonar.token=$token \
+                  -Dsonar.projectVersion=${BUILD_NUMBER}
+            '''
         }
-
-        stage('Retrieve Last 5 Sonar Reports') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'sonar-admin', usernameVariable: 'SONAR_USER', passwordVariable: 'SONAR_PASS')]) {
-                    echo "Fetching last 5 SonarQube analyses..."
-                    sh """
-                        curl -s -u \$SONAR_USER:\$SONAR_PASS "${SONARQUBE_SERVER}/api/project_analyses/search?project=sonar-analysis" \
-                        | jq '.analyses | sort_by(.date) | reverse | .[0:5] | map({build: .version, date: .date, revision: .revision, key: .key})' > sonar_last_5.json
-                    """
-                }
-                echo "Saved last 5 analyses to sonar_last_5.json"
-            }
-        }
-
+        echo 'SonarQube analysis completed.'
+    }
+}
         stage('Build with Maven') {
             steps {
                 sh 'mvn clean package -DskipTests'
