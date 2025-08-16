@@ -72,29 +72,19 @@ pipeline {
     steps {
         deleteDir() // clean workspace
         withCredentials([usernamePassword(credentialsId: 'k8s-git-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-            script {
-                sh """
-                    git clone https://$GIT_USER:$GIT_PASS@github.com/Vijaya150/star-agile-health-care.git
-                    cd star-agile-health-care
-                    git checkout gitops-manifests
+         sh '''
+        git clone https://$GIT_USER:$GIT_PASS@github.com/Vijaya150/star-agile-health-care.git
+        cd star-agile-health-care
+        git checkout gitops-manifests
+        sed -i 's|image: .*|image: 100.26.183.71:30091/medicure-app:${IMAGE_TAG}|' argocd/medicure-deploy.yml
+        git config user.name "Vijaya150"
+        git config user.email "vijayadarshini1503@gmail.com"
+        git diff --quiet || git commit -am "Update image to ${IMAGE_TAG} from Jenkins build #${BUILD_NUMBER}"
+        git push origin gitops-manifests
+    '''
+}
 
-                    # Update the image in ArgoCD manifest
-                    sed -i 's|image: .*|image: 100.26.183.71:30091/medicure-app:${IMAGE_TAG}|' argocd/medicure-deploy.yml
-
-                    # Configure git
-                    git config user.name "Vijaya150"
-                    git config user.email "vijayadarshini1503@gmail.com"
-
-                    # Commit only if there are changes
-                    git diff --quiet || git commit -am "Update image to ${IMAGE_TAG} from Jenkins build #${BUILD_NUMBER}"
-                    
-                    git push origin gitops-manifests
-                """
-            }
         }
     }
 }
-
-
-        }
-}
+ }
