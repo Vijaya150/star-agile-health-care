@@ -93,7 +93,7 @@ pipeline {
                 git checkout gitops-manifests
 
                 # Update Deployment YAML with new Docker image
-                sed -i 's|image: .*|image: 100.26.183.71:30091/medicure-app:${IMAGE_TAG}|' medicure-deploy.yml
+                sed -i 's|image: .*|image: 100.26.183.71:30091/medicure-app:${IMAGE_TAG}|' argocd/medicure-deploy.yml
 
                 # Set Git config
                 git config user.name "Vijaya"
