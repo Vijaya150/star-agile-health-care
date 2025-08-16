@@ -8,6 +8,6 @@ spec:
     app: medicure
   ports:
     - port: 80
-      targetPort: 8080
+      targetPort: 8082
       nodePort: 30900
   type: NodePort
