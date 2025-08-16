@@ -77,7 +77,7 @@ pipeline {
         cd star-agile-health-care
         git checkout gitops-manifests
         sed -i 's|image: .*|image: 100.26.183.71:30091/medicure-app:${IMAGE_TAG}|' argocd/medicure-deploy.yml
-        sed -i 's|targetPort: .*|targetPort: 8080|' argocd/service.yml
+        sed -i 's|targetPort: .*|targetPort: 8082|' argocd/service.yml
         git config user.name "Vijaya150"
         git config user.email "vijayadarshini1503@gmail.com"
         git diff --quiet || git commit -am "Update image to ${IMAGE_TAG} from Jenkins build #${BUILD_NUMBER}"
