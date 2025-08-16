@@ -93,7 +93,7 @@ pipeline {
                 sed -i 's|image: .*|image: 100.26.183.71:30091/medicure-app:${IMAGE_TAG}|' argocd/medicure-deploy.yml
                 git config user.name "Vijaya150"
                 git config user.email "vijayadarshini1503@gmail.com"
-                git add medicure-deploy.yml
+                git add argocd/medicure-deploy.yml
                 git commit -m "Update image to ${IMAGE_TAG} from Jenkins build #${BUILD_NUMBER}"
                 git push origin gitops-manifests
             """
