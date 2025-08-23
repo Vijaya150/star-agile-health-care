@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE_SERVER = "http://44.202.13.37:30800"
+        SONARQUBE_SERVER = "http://44.211.167.21:30800"
         DOCKER_REGISTRY = "3.83.241.115:30091"  // NodePort for Docker registry
         IMAGE_NAME = "medicure-app"
         IMAGE_TAG = "0.0.1"
